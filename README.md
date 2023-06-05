@@ -105,6 +105,17 @@ Find out your latitude and longitude here:
       <td><code>maxHourliesToShow</code></td>
       <td>How many hourly forecasts to list.<br><br><strong>Type</strong> <code>Number</code><br>Defaults to <code>3</code></td>
     </tr>
+       <tr>
+      <td><code>hourliesIncludeBetween</code></td>
+      <td>When you want hourly forecasts to start and end during the day. Accepts an object <code>{ }</code> with two integers called <code>start</code> and <code>end</code> (see example). <code>start</code> indicates what hour (0-24) each day's hourly forecast will begin. <code>end</code> indicates what real hour (0-24) of the day the hourly forecast will skip to tomorrow's forecast. Set a value of <code>-1</code> to remove that limit. The number of hourly forecasts displayed is still determined by <code>maxHourliesToShow</code>. For example, if <code>hourliesIncludeBetween</code> is <code>{start: 14, end: 18}</code> and <code>maxHourliesToShow</code> is <code>3</code> then 
+      <ul><li>before 3 PM, the hourly forecast will display the forecast for 2 PM, 3 PM, and 4 PM today</li>
+      <li>at 3 PM, the hourly forecast will display the forecast for 3 PM, 4 PM, and 5 PM today</li>
+      <li>at 4 PM, the hourly forecast will display the forecast for 4 PM, 5 PM, and 6 PM today</li>
+      <li>at 5 PM, the hourly forecast will display the forecast for 5 PM, 6 PM, and 7 PM today</li>
+      <li>at 6 PM, the hourly forecast will display the forecast for <i>tomorrow</i> at 2 PM, 3 PM, and 4 PM</li></ul>
+      <br><br><strong>Type</strong> <code>Object</code> requiring keys named <code>start</code> and <code>end</code>, each accepting an interger between -1 and 24 (-1 means no limit is used)
+      <br>Defaults to <code>{start: -1, end: -1}</code></td>
+    </tr>
     <tr>
       <td><code>showDailyForecast</code></td>
       <td>Whether to show daily forecast information. when set to <code>true</code> it works with the <code>maxDailiesToShow</code> parameter.<br><br><strong>Type</strong> <code>Boolean</code><br>Defaults to <code>true</code></td>
@@ -173,6 +184,7 @@ Find out your latitude and longitude here:
       <td><code>label_ordinals</code></td>
       <td>How you would like wind direction to be displayed.  Assumes index <code>0</code> is North and proceeds clockwise.<br><br><strong>Type</strong> <code>Array of Strings</code><br>Defaults to <code>["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]</code></td>
     </tr>
+
 
 
   </tbody>
