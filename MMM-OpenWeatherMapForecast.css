@@ -3,7 +3,7 @@
 }
 
 .MMM-OpenWeatherMapForecast .module-content {
-    width: 300px;
+    /* width: 300px; */
 }
 
 .MMM-OpenWeatherMapForecast .forecast-container .forecast-item .temperature,
