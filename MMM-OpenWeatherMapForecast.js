@@ -53,6 +53,7 @@ Module.register("MMM-OpenWeatherMapForecast", {
     requiresVersion: "2.2.0",
 
     defaults: {
+        debug: false,
         apikey: "",
         latitude: "",
         longitude: "",
@@ -343,7 +344,9 @@ Module.register("MMM-OpenWeatherMapForecast", {
                 if (this.weatherData.hourly[currentIndex] == null) {
                     break;
                 }
-                Log.info(this.weatherData.hourly);
+                if (this.config.debug) {
+                    Log.info(this.weatherData.hourly);
+                }
 
                 hourlies.push(this.forecastItemFactory(this.weatherData.hourly[currentIndex], "hourly"));
 
