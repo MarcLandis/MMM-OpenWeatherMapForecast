@@ -311,18 +311,23 @@ Module.register("MMM-OpenWeatherMapForecast", {
             if (this.config.hourliesIncludeBetween.start > -1) {
                 let hourWindow = this.config.hourliesIncludeBetween;
                 let windowLength = hourWindow.end - hourWindow.start;
+
                 if (windowLength < 1) {
                     Log.info("There seems to be a problem with the configuration of hourliedIncludeBetween. The window is " + windowLength + " hourls long.")
                 }
                 let currentHour = moment().hour();
+
                 let startDiff = hourWindow.start - currentHour;
+
                 if (startDiff > 0) {
                     currentIndex = currentIndex + startDiff - this.config.hourlyForecastInterval;
                 }
-                if (hourWindow.end = -1 ) {
+
+                if (hourWindow.end == -1 ) {
                     hourWindow.end = 24
                 }
                 let endDiff = hourWindow.end - currentHour;
+
                 if (endDiff < 0 ) {
                     currentIndex = currentIndex + 24 + startDiff - this.config.hourlyForecastInterval;
                     if ( this.config.hasOwnProperty('forecastHeaderText')  ) {
