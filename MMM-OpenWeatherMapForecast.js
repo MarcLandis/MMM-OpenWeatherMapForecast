@@ -330,7 +330,7 @@ Module.register("MMM-OpenWeatherMapForecast", {
 
                 if (endDiff < 0 ) {
                     currentIndex = currentIndex + 24 + startDiff - this.config.hourlyForecastInterval;
-                    if ( this.config.hasOwnProperty('forecastHeaderText')  ) {
+                    if ( this.config.hasOwnProperty('forecastHeaderText') && !(this.config.forecastHeaderText.includes("(Tomorrow)")) ) {
                         this.config.forecastHeaderText = this.config.forecastHeaderText + " (Tomorrow)";
                         
                     }
