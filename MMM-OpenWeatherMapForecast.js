@@ -477,12 +477,12 @@ Module.register("MMM-OpenWeatherMapForecast", {
      */
     units: {
         accumulationRain: {
-            imperial: "mm",
+            imperial: "in",
             metric: "mm",
             "": "mm"
         },
         accumulationSnow: {
-            imperial: "mm",
+            imperial: "in",
             metric: "mm",
             "": "mm"
         },
