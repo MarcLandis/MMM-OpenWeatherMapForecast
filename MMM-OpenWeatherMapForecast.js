@@ -53,6 +53,7 @@ Module.register("MMM-OpenWeatherMapForecast", {
     requiresVersion: "2.2.0",
 
     defaults: {
+        debug: false,
         apikey: "",
         latitude: "",
         longitude: "",
@@ -66,7 +67,7 @@ Module.register("MMM-OpenWeatherMapForecast", {
         forecastHeaderText: "",
         showForecastTableColumnHeaderIcons: true,
         showHourlyForecast: true,
-        hourlyForecastInterval: 3,
+        hourlyForecastInterval: 1,
         maxHourliesToShow: 3,
         showDailyForecast: true,
         maxDailiesToShow: 3,
@@ -92,7 +93,11 @@ Module.register("MMM-OpenWeatherMapForecast", {
         label_timeFormat: "h a",
         label_days: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
         label_ordinals: ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"],
-        moduleTimestampIdPrefix: "OPENWEATHER_ONE_CALL_TIMESTAMP_"
+        moduleTimestampIdPrefix: "OPENWEATHER_ONE_CALL_TIMESTAMP_",
+        hourliesIncludeBetween: {
+            start: 14, // -1 means not set
+            end: 18 // -1 means not set
+        },
     },
 
     validUnits: ["imperial", "metric", ""],
@@ -295,16 +300,59 @@ Module.register("MMM-OpenWeatherMapForecast", {
 
             var displayCounter = 0;
             var currentIndex = this.config.hourlyForecastInterval;
+                
+            /*
+            * Amos (FutureYamask) added this code to create two additional features:
+            * 1. the hourly forecast can start at the same time every day (hourliesDoNotStartBefore)
+            * 2. skip to the next day if the current time is hourlySkipToTomorrowAfterHours hours afer hourliesDoNotStartBefore
+            * (for example, if hourliesDoNotStartBefore = 14, and hourlySkipToTomorrowAfterHours = 4, 
+            * then before 2PM, the hourly display will start at 2PM,
+            *       between 2PM and 6PM, the hourly display will start at the current hour,
+            *       after 6PM, the hourly display will show the forecast for tomorrow at 2PM)
+            */
+            if (this.config.hourliesIncludeBetween.start > -1) {
+                let hourWindow = this.config.hourliesIncludeBetween;
+                let windowLength = hourWindow.end - hourWindow.start;
+
+                if (windowLength < 1) {
+                    Log.info("There seems to be a problem with the configuration of hourliedIncludeBetween. The window is " + windowLength + " hourls long.")
+                }
+                let currentHour = moment().hour();
+
+                let startDiff = hourWindow.start - currentHour;
+
+                if (startDiff > 0) {
+                    currentIndex = currentIndex + startDiff - this.config.hourlyForecastInterval;
+                }
+
+                if (hourWindow.end == -1 ) {
+                    hourWindow.end = 24
+                }
+                let endDiff = hourWindow.end - currentHour;
+
+                if (endDiff < 0 ) {
+                    currentIndex = currentIndex + 24 + startDiff - this.config.hourlyForecastInterval;
+                    if ( this.config.hasOwnProperty('forecastHeaderText') && !(this.config.forecastHeaderText.includes("(Tomorrow)")) ) {
+                        this.config.forecastHeaderText = this.config.forecastHeaderText + " (Tomorrow)";
+                        
+                    }
+                }
+
+            }
+
+
             while (displayCounter < this.config.maxHourliesToShow) {
                 if (this.weatherData.hourly[currentIndex] == null) {
                     break;
+                }
+                if (this.config.debug) {
+                    Log.info(this.weatherData.hourly);
                 }
 
                 hourlies.push(this.forecastItemFactory(this.weatherData.hourly[currentIndex], "hourly"));
 
                 currentIndex += this.config.hourlyForecastInterval;
                 displayCounter++;
-
             }
 
         }
