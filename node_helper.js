@@ -29,7 +29,7 @@ module.exports = NodeHelper.create({
     start() {
         this.logInfo("Starting node_helper");
         this.cache = {};
-        this.invalidateOldCacheIntervalId = setInterval(this.invalidateOldCache.bind(this), 12 * 60 * 60 * 1000); // Every 12 hours
+        this.invalidateOldCacheIntervalId = setInterval(this.invalidateOldCache.bind(this), moment.duration(12, 'hours').asMilliseconds());
     },
 
     stop() {
@@ -50,7 +50,7 @@ module.exports = NodeHelper.create({
 
         const cachedResponseBody = this.getCachedResponse(payload);
         if (cachedResponseBody !== undefined) {
-            this.logInfo('retrieved data from cache for');
+            this.logInfo('retrieved data from cache');
             this.sendWeatherData(payload, cachedResponseBody);
         } else {
             this.logInfo('retrieved data from OpenWeatherMap API');
@@ -101,7 +101,7 @@ module.exports = NodeHelper.create({
 
         if (cachedEntry !== undefined) {
             const ageInMilliseconds = moment().diff(cachedEntry.dateTime, 'ms');
-            if (ageInMilliseconds < this.getCacheTtl(payload.updateInterval)) {
+            if (ageInMilliseconds < moment.duration(payload.updateInterval, 'minutes').asMilliseconds() * 0.99) {
                 return cachedEntry.body;
             } else {
                 delete this.cache[key];
@@ -115,7 +115,6 @@ module.exports = NodeHelper.create({
         const key = this.buildCacheKey(payload);
         this.cache[key] = {
             dateTime: moment(),
-            cacheTtl: this.getCacheTtl(payload.updateInterval),
             body
         };
     },
@@ -123,14 +122,10 @@ module.exports = NodeHelper.create({
     invalidateOldCache() {
         const now = moment();
         Object.keys(this.cache).forEach(key => {
-            if (now.diff(this.cache[key].dateTime, 'ms') > this.cache[key].cacheTtl) {
+            if (now.diff(this.cache[key].dateTime, 'ms') > moment.duration(4, 'hours').asMilliseconds()) {
                 delete this.cache[key];
             }
         });
-    },
-
-    getCacheTtl(updateInterval) {
-        return updateInterval * 60 * 1000 * 0.99;
     },
 
     buildCacheKey(payload) {
