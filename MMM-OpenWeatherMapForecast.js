@@ -220,6 +220,7 @@ Module.register("MMM-OpenWeatherMapForecast", {
             language: this.config.language,
             instanceId: this.identifier,
             requestDelay: this.config.requestDelay,
+            updateInterval: this.config.updateInterval,
             endpoint: this.config.endpoint
         });
 
