@@ -127,7 +127,7 @@
 
                 <span class="precipitation-container">
                   {% if h.precipitation.accumulation %}
-                    {% if (config.showInlineIcons) and config.forecastLayout == "tiled" %}
+                    {% if config.showInlineIcons and config.forecastLayout == "tiled" %}
                       {% if h.precipitation.accumulationtype == "rain" %}
                         <img class="inline-icon rain" src="{{ inlineIcons.rain }}" />
                       {% endif %}
@@ -135,10 +135,9 @@
                         <img class="inline-icon snow" src="{{ inlineIcons.snow }}" />
                       {% endif %}
                     {% endif %}
-                    <span class="pop">{{ h.precipitation.pop }}</span>
-                    <span class="pop">{{ h.precipitation.accumulation }}</span>
+                    <span class="pop raincolor">{{ h.precipitation.pop }}</span>
+                    <span class="pop raincolor">{{ h.precipitation.accumulation }}</span>
                   {% else %}
-                    <img class="inline-icon rain" src="{{ inlineIcons.rain }}" />
                     <span class="pop">0%</span>
                   {% endif %}
                 </span>
@@ -199,10 +198,9 @@
                         <img class="inline-icon snow" src="{{ inlineIcons.snow }}" />
                       {% endif %}
                     {% endif %}
-                    <span class="pop">{{ d.precipitation.pop }}</span>
-                    <span class="pop">{{ d.precipitation.accumulation }}</span>
+                    <span class="pop raincolor">{{ d.precipitation.pop }}</span>
+                    <span class="pop raincolor">{{ d.precipitation.accumulation }}</span>
                   {% else %}
-                    <img class="inline-icon rain" src="{{ inlineIcons.rain }}" />
                     <span class="pop">0%</span>
                   {% endif %}
                 </span>
