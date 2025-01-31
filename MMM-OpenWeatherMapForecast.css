@@ -258,3 +258,7 @@
     display: block;
     white-space: nowrap;
 }
+
+.raincolor {
+  color: #6fc4f5;
+}
