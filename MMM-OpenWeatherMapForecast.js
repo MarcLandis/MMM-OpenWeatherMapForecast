@@ -68,6 +68,7 @@ Module.register("MMM-OpenWeatherMapForecast", {
         showPrecipitation: true,
         concise: true,
         showWind: true,
+        displayKmhForWind: false,
         showFeelsLike: true,
         language: config.language,
         iconset: "1c",
@@ -454,17 +455,32 @@ Module.register("MMM-OpenWeatherMapForecast", {
       Returns a formatted data object for wind conditions
      */
     formatWind: function(speed, bearing, gust) {
+        var conversionFactor = 1;
+        if (this.config.units !== "imperial" && this.config.displayKmhForWind){
+            conversionFactor = 3.6;
+        }
 
         //wind gust
         var windGust = null;
         if (!this.config.concise && gust) {
-            windGust = " (" + this.config.label_maximum + " " + Math.round(gust) + " " + this.getUnit("windSpeed") + ")";
+            windGust = " (" + this.config.label_maximum + " " + Math.round(gust * conversionFactor) + " " + this.getWindSpeedUnit() + ")";
         }
 
         return {
-            windSpeed: Math.round(speed) + " " + this.getUnit("windSpeed") + (!this.config.concise ? " " + this.getOrdinal(bearing) : ""),
+            windSpeed: Math.round(speed * conversionFactor) + " " + this.getWindSpeedUnit() + (!this.config.concise ? " " + this.getOrdinal(bearing) : ""),
             windGust: windGust
         };
+    },
+
+    /*
+      Returns the units for wind speed.
+      Use km/h if config 'displayKmhForWind' is set to true.
+     */
+    getWindSpeedUnit: function() {
+        if (this.config.units !== "imperial" && this.config.displayKmhForWind) {
+            return "km/h";
+        }
+        return this.units["windSpeed"][this.config.units];
     },
 
     /*
