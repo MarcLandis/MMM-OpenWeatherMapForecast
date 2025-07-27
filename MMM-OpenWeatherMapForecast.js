@@ -279,9 +279,7 @@ Module.register("MMM-OpenWeatherMapForecast", {
         if (this.config.concise) {
             summary = this.weatherData.hourly ? this.weatherData.hourly[0].weather[0].description : this.weatherData.current.weather[0].description;
         } else {
-            summary = (this.weatherData.current.weather[0].description + ".") + " " +
-                (this.weatherData.hourly ? this.weatherData.hourly[0].weather[0].description + " " : "") +
-                (this.weatherData.daily ? this.weatherData.daily[0].weather[0].description : "");
+            summary = this.weatherData.daily ? this.weatherData.daily[0].summary : "";
         }
 
         var hourlies = [];
