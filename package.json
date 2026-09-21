@@ -20,6 +20,6 @@
     "author": "Jeff Clarke",
     "license": "MIT",
     "dependencies": {
-        "moment": "^2.30.1"
+        "moment": "^2.31.0"
     }
 }
